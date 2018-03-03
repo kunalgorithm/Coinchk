@@ -30,6 +30,63 @@ Is it open source (availble on github)
 Cutoffs for all the numbers
 
 
+e.g.
+
+{
+	"name": NAME_OF_COIN,
+	"rank": COIN_MARKET_CAP_RANK,
+	"id": GITHUB_ID,
+	"num_stars": NUM_STARS,
+	"num_branches": NUM_BRANCHES,
+	"num_forks": NUM_FORKS,
+	"num_watchers": NUM_WATCHERS,
+	"readme_exists": 1 (or 0),
+	"readme_linecount": NUM_LINES (or 0),
+	"num_contributors": NUM_CONTRIBUTORS, <5 at most>
+	"contributors": [
+		{
+			"author_name": AUTHOR_NAME,
+			"num_commits": NUM_COMMITS,
+			"num_lines_added": NUM_LINES_ADDED,
+			"num_lines_deleted": NUM_LINES_DELETED,
+			"num_lines_edited": NUM_LINES_EDITED
+		}, ..... <5 most recent>
+	]
+	"num_commits": NUM_COMMITS, <5 at most>
+	"commits": [
+		{
+			"id": COMMIT_ID (starts from 0),
+			"date": DATE_PUSHED (YYYY-MM-DD),
+			"num_lines_added": NUM_LINES_ADDED,
+			"num_lines_deleted": NUM_LINES_DELETED,
+			"num_lines_edited": NUM_LINES_EDITED
+		}, .... <5 most recent>
+	]
+	
+	"num_prs_open": NUM_OPEN_PULL_REQUESTS, <5 most recent>
+	"num_prs_closed": NUM_CLOSED_PULL_REQUESTS, <5 most recent>
+	"prs": [
+		{
+			"id": PR_ID (starts from 0),
+			"title": PR_TITTLE,
+			"date": PR_DATE (YYYY-MM-DD),
+			"open": 1 (if open, 0 closed)
+		}, ... <10 most recent>
+	]
+	"num_issues_open": NUM_ISSUES_OPEN,
+	"num_issues_closed": NUM_ISSUES_CLOSED,<5 most recent>
+	"issues": [
+		{
+			"id": ISSUES_ID (starts from 0),
+			"title": ISSUE_TITLE,
+			"date": ISSUE_DATE (YYYY-MM-DD),
+			"open": 1 (if open, 0 closed)
+		}, ... <5 most recent>
+	]
+	"fork": 1 (or 0) <if forked its a 1>
+}
+
+
 
 Presentation of Data:
 -----------------------------------------------------------------------------------------------------------
