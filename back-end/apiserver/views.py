@@ -24,7 +24,7 @@ def _overview(coin):
 
 def _details(coin):
 
-    req = 15 if coin.rank <= 100 else 10
+    req = 30 if coin.rank <= 100 else 15
     # commit_day_diff = (datetime.now() - coin.latest_commits).days
     # pr_day_diff = (datetime.now() - coin.latest_pr).days
 
@@ -34,9 +34,9 @@ def _details(coin):
         'name': coin.coin_name,
         'is_open_sourced': 1 if coin.is_open_sourced else 0,
         'is_forked': 1 if coin.forked else 0,
-        'is_readme_good': 1 if coin.readme_exists and coin.readme_num_lines >= 100 else 0,
+        'is_readme_good': 1 if coin.readme_exists and coin.readme_num_lines >= 50 else 0,
         'is_contributor_active': 1 if coin.num_contributors >= req else 0,
-        'is_development_recent': coin.bin_commits or coin.bin_prs,
+        'is_development_recent': 1 if coin.bin_commits or coin.bin_prs else 0,
         'is_open_issues_small': 1 if coin.num_open_issues <= issues_req else 0,
         'num_stars': coin.num_stars,
         'num_watchers': coin.num_watchers,
