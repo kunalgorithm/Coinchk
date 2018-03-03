@@ -20,5 +20,6 @@ from apiserver import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main),
-    url(r'^coins/(?P<rt_id>\w+)/?', views.api_details),
+    # url(r'^coins/(?P<rt_id>\w+)/?', views.api_details),
+    url(r'^coins/?', views.api_range),
 ]

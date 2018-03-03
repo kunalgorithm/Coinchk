@@ -94,8 +94,8 @@ def get_commits_and_contributors(repo):
 
     contribs_stats = repo.get_stats_contributors()
     if contribs_stats is None: contribs_stats = repo.get_stats_contributors()
-
-    return {"num_commits": commit_id, "commits": commits_data}, {"num_contributors": len(contribs_stats), "contributors": contributors}
+    cnt = 0 if contribs_stats is None else len(contribs_stats)
+    return {"num_commits": commit_id, "commits": commits_data}, {"num_contributors": cnt, "contributors": contributors}
 
 
 def get_pull_requests(repo):

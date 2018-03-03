@@ -42,7 +42,7 @@ e.g.
 	"num_watchers": NUM_WATCHERS,
 	"readme_exists": 1 (or 0),
 	"readme_linecount": NUM_LINES (or 0),
-	"num_contributors": NUM_CONTRIBUTORS, <5 at most>
+	"num_contributors": NUM_CONTRIBUTORS,
 	"contributors": [
 		{
 			"author_name": AUTHOR_NAME,

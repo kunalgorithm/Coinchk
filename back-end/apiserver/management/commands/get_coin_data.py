@@ -22,8 +22,11 @@ class Command(BaseCommand):
         with open(file_name_out, 'w') as ff:
             ff.write("[")
             for line in lines:
+                if line == "\n": continue
                 i, coin_name, coin_id, rank = line.strip().split(",")
                 print 'processing {0}, {1}'.format(i, coin_name)
+                if coin_id == '':
+                    continue
                 res = get_coin_data(coin_name, coin_id, rank)
                 ff.write(json.dumps(res) + ",")
             ff.write("]")
