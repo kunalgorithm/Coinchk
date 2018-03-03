@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import math
 
 # Read in the input json data and store in variable data
 with open("sample.json", "r") as input_file:
@@ -7,6 +8,27 @@ with open("sample.json", "r") as input_file:
     input_file.close()
 
 CUTOFF = 0.3
+
+
+# Methods for creating new data parameters from existing ones
+# For commits + num days since commit
+
+def average_days():
+    for currency_name in data.keys():
+        commit_lst = data[currency_name]["commits"]
+        for commit in commit_lst:
+            data[currency_name]["average days since commits"] += commit["date"]
+        data[currency_name]["average days since commits"] \
+            = data[currency_name]["average days since commits"] / len(commit_lst)
+
+
+
+
+
+#-------------------------------------------------------------------------------------
+# The Following Is for Home Page Cutoffs, Whatever data sent will be assumed to be
+# Significant and it will be analyzed
+#-------------------------------------------------------------------------------------
 
 """
 @Parameters
@@ -26,7 +48,11 @@ def compute_cutoff(lst, threshold = CUTOFF):
 
 
 # automatically get all the child fields of a given currency
-entry_name = data["bitcoin"].keys()
+entry_names = ["contributors", "stars"]
+
+#entry_names = ["num_branches", "num_stars", "num_forks", "num_watchers",
+#  "num_contributors", "num_branches", "rank", "readme_linecount", "num_commits",
+#  "num_prs_open", "num_issues_closed"]
 
 
 """
@@ -39,7 +65,7 @@ No Inputs
 """
 def cutoff_mapping():
     mapping = {}
-    for name in entry_name:
+    for name in entry_names:
         temp = []
         for val in data.keys():
             temp.append(data[val][name])
@@ -62,7 +88,7 @@ boolean values for the given currency
 def specific_currency_home_data(currency_name, dict_cutoff):
     currency_data = data[currency_name]
     temp = {}
-    for name in entry_name:
+    for name in entry_names:
         if (dict_cutoff[name] < currency_data[name]):
             temp[name] = True
         else:
@@ -88,3 +114,42 @@ def all_currency_home_data():
 
 #Get everything started
 all_currency_home_data()
+
+
+#-------------------------------------------------------------------------------------------------
+#                               Compute an Aggregated Value for each currency
+#-------------------------------------------------------------------------------------------------
+
+
+def compute_max(lst):
+    array = np.array(lst)
+    return np.amax(lst)
+
+entry_names = data["bitcoin"].keys()
+
+def field_maxes():
+    mapping = {}
+    for name in entry_names:
+        temp = []
+        for val in data.keys():
+            temp.append(data[val][name])
+        mapping[name] = math.log10(compute_max(temp))
+    return mapping
+
+def compute_score(currency_name, max_dict):
+    total = 0
+    for name in entry_names:
+        total += (math.log10(data[currency_name][name]) / max_dict[name])
+    return (total * 100) / len(entry_names)
+
+def all_scores():
+    final = {}
+    max_dict = field_maxes()
+    for currency_name in data:
+        final[currency_name] = compute_score(currency_name, max_dict)
+    with open("total_scores.json", "w") as f:
+        json.dump(final, f)
+        f.close()
+
+
+all_scores()
