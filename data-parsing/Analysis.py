@@ -19,21 +19,27 @@ def average_commit_days(currency_data):
     for commit in commit_lst:
         days = (now - datetime.strptime(commit["date"], "%Y-%m-%d")).days
         currency_data["average days since commits"] += days
-    currency_data["average days since commits"] \
-        = currency_data["average days since commits"] / len(commit_lst)
+    if (len(commit_lst) > 0):
+        currency_data["average days since commits"] \
+            = currency_data["average days since commits"] / len(commit_lst)
     return currency_data["average days since commits"]
 
 def average_pull_request_days(currency_data):
     now = datetime.now()
     prs_lst = currency_data["prs"]
     currency_data["average days since open prs"] = 0
+    length = 0
     for prs in prs_lst.values():
         if (prs["open"] == 0):
+            length += 1
             days = (now - datetime.strptime(prs["date"], "%Y-%m-%d")).days
             currency_data["average days since open prs"] += days
-    currency_data["average days since open prs"] \
-        = currency_data["average days since open prs"] / len(prs_lst)
-    return currency_data["average days since open prs"]
+    if (length > 0):
+        currency_data["average days since open prs"] \
+            = currency_data["average days since open prs"] / len(prs_lst)
+        return currency_data["average days since open prs"]
+    else:
+        return math.inf
 
 
 
@@ -102,7 +108,10 @@ def bool_to_binary(state):
         return 0
 
 
-def parse_home_data():
+def parse_home_data(input, output):
+    with open(input, "r") as input_file:
+        data = json.load(input_file)
+        input_file.close()
     overall = {}
     for i in range(0, len(data)):
         currency_data = data[i]
@@ -113,11 +122,11 @@ def parse_home_data():
             "contributors": bool_to_binary(team_size(currency_data)),
             "under development": bool_to_binary(developing(currency_data)),
             "open issues": bool_to_binary(open_issues(currency_data)),
-            "interest": bool_to_binary(dev_interest(currency_data)),
+            "interest": (dev_interest(currency_data)),
             "readme": bool_to_binary(readme_valid(currency_data, readme_threshold()))
         }
         overall.update({currency_name: dictionary})
-    with open("output_sample.json", "w") as f:
+    with open(output, "w") as f:
         json.dump(overall, f)
         f.close()
 
@@ -246,13 +255,13 @@ to compute the boolean values based on cutoffs for each of the currencies
     There is no return, this method will directly convert the dictionary 
     computed into json and write that into the specified file
 """
-def all_currency_home_data():
+def all_currency_home_data(output):
     print("out")
     overall = {}
     dict_cutoff = cutoff_mapping()
     for val in data:
         overall.update(specific_currency_home_data(val["name"], dict_cutoff))
-    with open("output_sample.json", "w") as f:
+    with open(output, "w") as f:
         json.dump(overall, f)
         f.close()
 
@@ -310,7 +319,14 @@ def all_scores():
 
 
 def __init__():
-    parse_home_data()
+    parse_home_data("top_10coins_data.json", "top_10coins_data_ouput.json")
+    parse_home_data("top11_43_coins_data.json", "top11_43_coins_data_ouput.json")
+    parse_home_data("top_44_50_coins_data.json", "top_44_50_coins_data_ouput.json")
+    parse_home_data("top_51_100_coins_data.json", "top_51_100_coins_data_ouput.json")
+    parse_home_data("top_101_140_coins_data.json", "top_101_140_coins_data_ouput.json")
+    parse_home_data("top_141_167_coins_data.json", "top_141_167_coins_data_ouput.json")
+    parse_home_data("top_168_200_coins_data.json", "top_168_200_coins_data_ouput.json")
+
 
 
 __init__()
