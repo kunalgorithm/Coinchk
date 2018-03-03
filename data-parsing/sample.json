@@ -1,0 +1,22 @@
+{
+  "bitcoin": {
+    "contributors": 3,
+    "stars": 100
+  },
+  "currency2": {
+    "contributors": 10,
+    "stars": 120
+  },
+  "currency3": {
+    "contributors": 13,
+    "stars": 120
+  },
+  "currency4": {
+    "contributors": 116,
+    "stars": 180
+  },
+  "currency5": {
+    "contributors": 10003,
+    "stars": 10000003
+  }
+}
