@@ -5,6 +5,7 @@
 
 ## How to run Django
 
+0. setup an env variable called "GITHUB_ACCESS_TOKEN" to a github access token
 1. run 'python manage.py runserver'
 
 ## How to fetch the names of all top N coins from coinmarketcap.com in JSON
