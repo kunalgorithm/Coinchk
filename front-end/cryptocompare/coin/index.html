@@ -19,18 +19,8 @@
     <![endif]-->
   </head>
   <body class="container">
-    <h1>HackRice 7.5: Crypto Compare</h1>
+    <h1>One Coin</h1>
     <h3>Developed by Kunal Shah, Nate Kim, and Krishna Goel</h3>
-
-    <div class="row">
-      <div class="jumbotron col-xs-offset-2 col-xs-8">
-        <p>
-          This website indexes the top 10 cryptocurrencies by market cap (how
-          much the sum of all coins is collectively worth), and gives you an easy
-          way to compare cryptocurrency performance and rank over the last week.
-        </p>
-      </div>
-    </div>
 
     <div id="app">
       <table class="table table-hover">
@@ -41,16 +31,9 @@
             <td>Symbol</td>
             <td>Price (USD)</td>
             <td>1H</td>
-<!--             <td>1D</td>
-            <td>1W</td> -->
-            <td>Open Source</td>
-            <td>Forked Repo</td>
-            <td>Readme Lines</td>
-            <td>Number Contributors</td>
-            <td>Recent Commits (last 2 months)</td>
-            <td>Number if Issues</td>
-            <td>Number if Stars</td>
-            <!-- <td>Market Cap (USD)</td> -->
+            <td>1D</td>
+            <td>1W</td>
+            <td>Market Cap (USD)</td>
         </thead>
         <tbody>
           <tr v-cloak v-for="coin in coins">
@@ -61,18 +44,13 @@
             <td v-bind:style="getColor(coin.percent_change_1h)">
               <span v-if="coin.percent_change_1h > 0">+</span>{{ coin.percent_change_1h }}%
             </td>
-<!--             <td v-bind:style="getColor(coin.percent_change_24h)">
+            <td v-bind:style="getColor(coin.percent_change_24h)">
               <span v-if="coin.percent_change_24h > 0">+</span>{{ coin.percent_change_24h }}%
             </td>
             <td v-bind:style="getColor(coin.percent_change_7d)">
               <span v-if="coin.percent_change_7d > 0">+</span>{{ coin.percent_change_7d }}%
-            </td> -->
-            <td>1</td>
-            <td>2</td>
-            <!-- Market Cap (USD) -->
-            <!-- <td>{{ coin.market_cap_usd | currency }}</td> -->
-            <!-- Open Link -->
-            <!-- <td><a :href="/coin/">Open</a></td> -->
+            </td>
+            <td>{{ coin.market_cap_usd | currency }}</td>
           </tr>
         </tbody>
       </table>
