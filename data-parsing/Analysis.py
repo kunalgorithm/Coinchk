@@ -1,25 +1,140 @@
 import json
 import numpy as np
 import math
+from datetime import datetime
 
 # Read in the input json data and store in variable data
-with open("sample.json", "r") as input_file:
+with open("top_10coins_data.json", "r") as input_file:
     data = json.load(input_file)
     input_file.close()
 
-CUTOFF = 0.3
+CUTOFF = 0.2
+
+
+
+def average_commit_days(currency_data):
+    now = datetime.now()
+    commit_lst = currency_data["commits"]
+    currency_data["average days since commits"] = 0
+    for commit in commit_lst:
+        days = (now - datetime.strptime(commit["date"], "%Y-%m-%d")).days
+        currency_data["average days since commits"] += days
+    currency_data["average days since commits"] \
+        = currency_data["average days since commits"] / len(commit_lst)
+    return currency_data["average days since commits"]
+
+def average_pull_request_days(currency_data):
+    now = datetime.now()
+    prs_lst = currency_data["prs"]
+    currency_data["average days since open prs"] = 0
+    for prs in prs_lst.values():
+        if (prs["open"] == 0):
+            days = (now - datetime.strptime(prs["date"], "%Y-%m-%d")).days
+            currency_data["average days since open prs"] += days
+    currency_data["average days since open prs"] \
+        = currency_data["average days since open prs"] / len(prs_lst)
+    return currency_data["average days since open prs"]
+
+
+
+
+
+
+def get_currency_data(currency_name):
+    currency_data = None
+    for i in range(0, len(data)):
+        if (data[i]["name"] == currency_name):
+            currency_data = data[i]
+            break
+    if (not currency_data == None):
+        print("error")
+    else:
+        return currency_data
+
+
+def is_opensource(currency_data):
+    return True
+
+
+def is_forked(currency_data):
+    return currency_data["forked"] == 0
+
+def readme_threshold():
+    temp = []
+    for i in range(0, 10):
+        temp.append(data[i]["readme_linecount"])
+    return np.amin(temp)
+
+
+def readme_valid(currency_data, threshold):
+    return currency_data["readme_linecount"] > threshold
+
+
+#contributors
+def team_size(currency_data):
+    if (int(currency_data["rank"]) <= 100):
+        return currency_data["num_contributors"] >= 15
+    elif (int(currency_data["rank"]) > 100 and int(currency_data["rank"]) <= 500):
+        return currency_data["num_contributors"] >= 10
+    else:
+        return currency_data["num_contributors"] >= 5
+
+def developing(currency_data):
+    commit_days = average_commit_days(currency_data)
+    prs_days = average_pull_request_days(currency_data)
+    return commit_days < 60 or prs_days < 14
+
+def open_issues(currency_data):
+    if (int(currency_data["rank"]) <= 20):
+        return currency_data["num_issues_open"] < 1000
+    else:
+        return currency_data["num_issues_open"] < 100
+
+def dev_interest(currency_data):
+    return {"num stars": currency_data["num_stars"],
+            "num forks": currency_data["num_forks"],
+            "num watchers": currency_data["num_watchers"]}
+
+def bool_to_binary(state):
+    if(state):
+        return 1
+    else:
+        return 0
+
+
+def parse_home_data():
+    overall = {}
+    for i in range(0, len(data)):
+        currency_data = data[i]
+        currency_name = data[i]["name"]
+        dictionary = {
+            "opensource": bool_to_binary(is_opensource(currency_data)),
+            "forked": bool_to_binary(is_forked(currency_data)),
+            "contributors": bool_to_binary(team_size(currency_data)),
+            "under development": bool_to_binary(developing(currency_data)),
+            "open issues": bool_to_binary(open_issues(currency_data)),
+            "interest": bool_to_binary(dev_interest(currency_data)),
+            "readme": bool_to_binary(readme_valid(currency_data, readme_threshold()))
+        }
+        overall.update({currency_name: dictionary})
+    with open("output_sample.json", "w") as f:
+        json.dump(overall, f)
+        f.close()
+
+
+
+
+
+
+
+
+
 
 
 # Methods for creating new data parameters from existing ones
 # For commits + num days since commit
 
-def average_days():
-    for currency_name in data.keys():
-        commit_lst = data[currency_name]["commits"]
-        for commit in commit_lst:
-            data[currency_name]["average days since commits"] += commit["date"]
-        data[currency_name]["average days since commits"] \
-            = data[currency_name]["average days since commits"] / len(commit_lst)
+
 
 
 
@@ -48,12 +163,14 @@ def compute_cutoff(lst, threshold = CUTOFF):
 
 
 # automatically get all the child fields of a given currency
-entry_names = ["contributors", "stars"]
+# entry_names = ["contributors", "stars"]
 
-#entry_names = ["num_branches", "num_stars", "num_forks", "num_watchers",
-#  "num_contributors", "num_branches", "rank", "readme_linecount", "num_commits",
-#  "num_prs_open", "num_issues_closed"]
+entry_names = ["num_branches", "num_stars", "num_forks", "num_watchers",
+  "num_contributors", "num_branches", "rank", "readme_linecount", "num_commits",
+  "num_prs_open", "num_issues_closed", "average days since commits"]
 
+#hard_thresholds = ("contributors (0 - 100)": 15, "readme": "more than least of top 10", contributors (100 - 500): 10
+# contributors (500 - ): 5}
 
 """
 No Inputs
@@ -67,8 +184,8 @@ def cutoff_mapping():
     mapping = {}
     for name in entry_names:
         temp = []
-        for val in data.keys():
-            temp.append(data[val][name])
+        for val in data:
+            temp.append(val[name])
         mapping[name] = compute_cutoff(temp)
     return mapping
 
@@ -86,14 +203,40 @@ boolean values for the given currency
     for each of the top level fields in the input dictionary
 """
 def specific_currency_home_data(currency_name, dict_cutoff):
-    currency_data = data[currency_name]
+    currency_data = None
+    for i in range(0, len(data)):
+        if (data[i]["name"] == currency_name):
+            currency_data = data[i]
+            break
+
     temp = {}
     for name in entry_names:
         if (dict_cutoff[name] < currency_data[name]):
             temp[name] = True
         else:
             temp[name] = False
+    temp.update(process_binary_names(currency_data))
     return {currency_name: temp}
+
+binary_names = ["fork", "readme_exists"]
+
+"""
+Seperate class for socring a given currencies
+binary data
+"""
+def process_binary_names(currency_data):
+    temp = {}
+    if (currency_data["forked"] == 1):
+        temp["forked"] = False
+    else:
+        temp["forked"] = True
+
+    if (currency_data["readme_exists"] == 0):
+        temp["readme_exists"] = False
+    else:
+        temp["readme_exists"] = True
+    return temp
+
 
 """
 No inputs, will just repeatedly call specific_currency_home_data
@@ -104,16 +247,18 @@ to compute the boolean values based on cutoffs for each of the currencies
     computed into json and write that into the specified file
 """
 def all_currency_home_data():
+    print("out")
     overall = {}
     dict_cutoff = cutoff_mapping()
-    for currency_name in data:
-        overall.update(specific_currency_home_data(currency_name, dict_cutoff))
+    for val in data:
+        overall.update(specific_currency_home_data(val["name"], dict_cutoff))
     with open("output_sample.json", "w") as f:
         json.dump(overall, f)
         f.close()
 
-#Get everything started
-all_currency_home_data()
+
+
+
 
 
 #-------------------------------------------------------------------------------------------------
@@ -125,21 +270,31 @@ def compute_max(lst):
     array = np.array(lst)
     return np.amax(lst)
 
-entry_names = data["bitcoin"].keys()
+# entry_names = data["bitcoin"].keys()
+
+entry_names = ["num_branches", "num_stars", "num_forks", "num_watchers",
+  "num_contributors", "num_branches", "readme_linecount", "num_commits",
+  "num_prs_open", "num_issues_closed"]
 
 def field_maxes():
     mapping = {}
     for name in entry_names:
         temp = []
-        for val in data.keys():
-            temp.append(data[val][name])
+        for val in data:
+            temp.append(val[name])
+        print(temp)
         mapping[name] = math.log10(compute_max(temp))
     return mapping
 
 def compute_score(currency_name, max_dict):
+    currency_data = None
+    for i in range(0, len(data)):
+        if (data[i]["name"] == currency_name):
+            currency_data = data[i]
+            break
     total = 0
     for name in entry_names:
-        total += (math.log10(data[currency_name][name]) / max_dict[name])
+        total += (math.log10(currency_data[name]) / max_dict[name])
     return (total * 100) / len(entry_names)
 
 def all_scores():
@@ -152,4 +307,10 @@ def all_scores():
         f.close()
 
 
-all_scores()
+
+
+def __init__():
+    parse_home_data()
+
+
+__init__()
