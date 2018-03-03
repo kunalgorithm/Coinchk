@@ -11,9 +11,9 @@ Indicators:
 Tasks: 
 1. Front End 
 2. Backend 
-- Get Django set up 
+- ~~Get Django set up~~ DONE
 - use the github API to get data for each coin 
-- get a list of crpytos from coinmarketcap 
+- ~~get a list of crpytos from coinmarketcap~~ DONE
 - identify the set of APIs that the front end might need from the backend
 - Analyzing and graphing the data 
 - determining what columns, pop-ups, and 
