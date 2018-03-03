@@ -32,12 +32,12 @@ def _details(coin):
 
     return {
         'name': coin.coin_name,
-        'is_open_sourced': True if coin.is_open_sourced else False,
-        'is_forked': True if coin.forked else False,
-        'is_readme_good': True if coin.readme_exists and coin.readme_num_lines >= 100 else False,
-        'is_contributor_active': True if coin.num_contributors >= req else False,
+        'is_open_sourced': 1 if coin.is_open_sourced else 0,
+        'is_forked': 1 if coin.forked else 0,
+        'is_readme_good': 1 if coin.readme_exists and coin.readme_num_lines >= 100 else 0,
+        'is_contributor_active': 1 if coin.num_contributors >= req else 0,
         'is_development_recent': coin.bin_commits or coin.bin_prs,
-        'is_open_issues_small': True if coin.num_open_issues <= issues_req else False,
+        'is_open_issues_small': 1 if coin.num_open_issues <= issues_req else 0,
         'num_stars': coin.num_stars,
         'num_watchers': coin.num_watchers,
         'num_forks': coin.num_forks
