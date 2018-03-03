@@ -131,8 +131,8 @@ STATIC_URL = '/static/'
 
 # Github API object
 GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
-if GITHUB_ACCESS_TOKEN is None:
-    raise Exception("Github access token must be set!")
+# if GITHUB_ACCESS_TOKEN is None:
+#     raise Exception("Github access token must be set!")
 github_object = Github(GITHUB_ACCESS_TOKEN)
 
 
