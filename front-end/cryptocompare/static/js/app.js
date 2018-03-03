@@ -17,6 +17,8 @@ let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
 let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-checkbox-512.png";
 let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
 
+let LOCAL_API = "http://localhost:8000";
+
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
 let UPDATE_INTERVAL = 60 * 1000;
@@ -25,7 +27,8 @@ let app = new Vue({
   el: "#app",
   data: {
     coins: [],
-    coinData: {}
+    coinData: {},
+    parseData: {}
   },
   methods: {
 
@@ -54,7 +57,7 @@ let app = new Vue({
     getCoins: function() {
       let self = this;
 
-      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=10")
+      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=16")
         .then((resp) => {
           this.coins = resp.data;
         })
@@ -81,9 +84,23 @@ let app = new Vue({
     },
 
     // DEV METHODS
-    getOpenSource: function(num) {
-      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
+    getParseData: function() {
+      let self = this;
+
+      axios.get(LOCAL_API + "/coins?from=1&to=16")
+        .then((resp) => {
+          this.parseData = resp.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      
     },
+    getOpenSource: function(rank) {
+      return rank > 1.00 ? CHECK_MARK : WRONG_MARK;
+      
+    },
+    
     getForked: function(num) {
       return num > 1.00 ? CHECK_MARK : WRONG_MARK;
     },
@@ -120,6 +137,7 @@ let app = new Vue({
    */
   created: function () {
     this.getCoinData();
+    this.getParseData();
   }
 });
 

@@ -67,7 +67,7 @@
             <td v-bind:style="getColor(coin.percent_change_7d)">
               <span v-if="coin.percent_change_7d > 0">+</span>{{ coin.percent_change_7d }}%
             </td> -->
-            <td><img v-bind:src="getOpenSource(coin.price_usd)"></td>
+            <td><img v-bind:src="getOpenSource(coin.rank)"></td>
             <td><img v-bind:src="getForked(coin.price_usd)"></td>
             <td><img v-bind:src="getReadme(coin.price_usd)"></td>
             <td><img v-bind:src="getContributions(coin.price_usd)"></td>
