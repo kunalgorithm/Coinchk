@@ -133,7 +133,7 @@ STATIC_URL = '/static/'
 GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
 if GITHUB_ACCESS_TOKEN is None:
     raise Exception("Github access token must be set!")
-g = Github(GITHUB_ACCESS_TOKEN)
+github_object = Github(GITHUB_ACCESS_TOKEN)
 
 
 coinmarketcap_api = Market()

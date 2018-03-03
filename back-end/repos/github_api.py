@@ -1,10 +1,10 @@
-from apiserver.settings import g
+from apiserver.settings import github_object
 
 
 def get_contributors(req):
 
     repo_name = req.get_repo_id()
-    repo = g.get_repo(repo_name)
+    repo = github_object.get_repo(repo_name)
 
     l = []
 
