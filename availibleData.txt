@@ -1,0 +1,37 @@
+The Data We Collect:
+----------------------------------------------------------------------------------------------------------------
+Number of Issues
+	Open				Date: Of Open
+	Closed				Date: of Open
+Number of Stars
+Number of Forks
+Number of Watchers
+Number of pull Requests 
+	Ever Created
+	Closed
+	Open
+Number of Contributer
+	Each Contributer
+		Number of Commits
+		Number of lines add/deleted
+		Date of each commit
+		Determine active contirbuters verseus one of contributers
+Number of Commits
+	Date of Commit
+	Lines of Code changed (broken down into add and delte)
+Number of Branches
+
+Readme (whether or not thorough) 
+	--Number of line
+
+Binary Indcators
+Forked from another repository
+Is it open source (availble on github)
+Cutoffs for all the numbers
+
+
+
+Presentation of Data:
+-----------------------------------------------------------------------------------------------------------
+Column wise presentation of data. 		
+	
