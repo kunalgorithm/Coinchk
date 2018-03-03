@@ -2,6 +2,7 @@ import json
 from django.core.management.base import BaseCommand
 
 from repos.coinmarketcap_api import get_coin_rankings
+from repos.models import CoinResult
 
 
 class Command(BaseCommand):
@@ -13,13 +14,25 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         file_name = options['file_name'][0]
 
-        d = json.loads(file_name.read())
+        f = open(file_name, 'r')
+        d = f.readlines()
 
-        coins = get_coin_rankings(0, num_coins)
-        res_json = {}
+        for l in d:
+            # print l
+            l = l.strip().split(',')
+            m = CoinResult(
+                coin_name=l[0],
+                github_id=l[1],
+                rank=int(l[2])
+            )
+            m.save()
 
-        for coin in coins:
-            res_json[coin[1]] = coin[0]
 
-        with open(file_name, 'w') as f:
-            f.write(json.dumps(res_json))
+        # coins = get_coin_rankings(0, num_coins)
+        # res_json = {}
+
+        # for coin in coins:
+        #     res_json[coin[1]] = coin[0]
+        #
+        # with open(file_name, 'w') as f:
+        #     f.write(json.dumps(res_json))
