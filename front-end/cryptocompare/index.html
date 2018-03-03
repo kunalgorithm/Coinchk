@@ -67,8 +67,14 @@
             <td v-bind:style="getColor(coin.percent_change_7d)">
               <span v-if="coin.percent_change_7d > 0">+</span>{{ coin.percent_change_7d }}%
             </td> -->
-            <td>1</td>
-            <td>2</td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+            <td><img v-bind:src="getNewData(coin.price_usd)"></td>
+
             <!-- Market Cap (USD) -->
             <!-- <td>{{ coin.market_cap_usd | currency }}</td> -->
             <!-- Open Link -->

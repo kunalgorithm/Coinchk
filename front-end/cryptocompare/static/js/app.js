@@ -14,6 +14,9 @@ let CRYPTOCOMPARE_URI = "https://www.cryptocompare.com";
 // found at: https://coinmarketcap.com/api/
 let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
 
+let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-checkbox-512.png";
+let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
+
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
 let UPDATE_INTERVAL = 60 * 1000;
@@ -75,6 +78,12 @@ let app = new Vue({
       symbol = (symbol === "VERI" ? "VRM" : symbol);
 
       return CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl;
+    },
+
+    getNewData: function(price) {
+      // return this.coinData[symbol].ImageUrl;
+      return price > 1.00 ? CHECK_MARK : WRONG_MARK;
+      return CHECK_MARK;
     },
 
     /**
