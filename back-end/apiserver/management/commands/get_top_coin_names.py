@@ -1,5 +1,5 @@
 import json
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from repos.coinmarketcap_api import get_coin_rankings
 
