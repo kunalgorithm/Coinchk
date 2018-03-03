@@ -80,11 +80,30 @@ let app = new Vue({
       return CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl;
     },
 
-    getNewData: function(price) {
-      // return this.coinData[symbol].ImageUrl;
-      return price > 1.00 ? CHECK_MARK : WRONG_MARK;
-      return CHECK_MARK;
+    // DEV METHODS
+    getOpenSource: function(num) {
+      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
     },
+    getForked: function(num) {
+      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
+    },
+    getReadme: function(num) {
+      return num > 500 ? CHECK_MARK : WRONG_MARK;
+    },
+    getContributions: function(num) {
+      return num > 15 ? CHECK_MARK : WRONG_MARK;
+    },
+    getRecentCommits: function(num) {
+      return num < 2 ? CHECK_MARK : WRONG_MARK;
+    },
+    getIssues: function(num) {
+      return num < 50 ? CHECK_MARK : WRONG_MARK;
+    },
+    getStars: function(num) {
+      return num;
+    },
+
+    // END DEV METHODS
 
     /**
      * Return a CSS color (either red or green) depending on whether or
