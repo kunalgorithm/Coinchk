@@ -48,7 +48,7 @@
             <td>Forked Repo</td>
             <td>Readme Lines</td>
             <td>Active Contributors</td>
-            <td>Recent Commits (last 2 months)</td>
+            <td>Recent Commits</td>
             <td>Addressed Issues</td>
             <td>Number of Stars</td>
             <td><strong>Overall Score</strong></td>
@@ -76,7 +76,7 @@
             <td><img v-bind:src="getRecentCommits(coin.rank)"></td>
             <td><img v-bind:src="getIssues(coin.rank)"></td>
             <td>{{ getStars(coin.rank) }}</td> 
-            <td>{{ getScore(coin.rank) }}</td> 
+            <td><strong>{{ getScore(coin.rank) }}</strong></td> 
 
 
             <!-- Market Cap (USD) -->
