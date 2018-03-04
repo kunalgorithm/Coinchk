@@ -18,7 +18,7 @@ let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-che
 let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
 
 let LOCAL_API = "http://localhost:8000/coins?from=1&to=20";
-let PARSED_DATA = "http://coinchk.com/parsedData.json";
+let SERVER_API = "http://coinchk.com/parsedData.json";
 
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
@@ -100,6 +100,7 @@ let app = new Vue({
 
       axios.get(LOCAL_API)
         .then((resp) => {
+          // console.log(resp.data);
           this.parseData = resp.data;
         })
         .catch((err) => {
@@ -107,28 +108,29 @@ let app = new Vue({
         });
       
     },
-    getOpenSource: function(rank) {
-      return rank > 1.00 ? CHECK_MARK : WRONG_MARK;
+    getOpenSource: function(num) {
+      return this.parseData[parseInt(num)]["is_open_sourced"] ? CHECK_MARK : WRONG_MARK;
       
     },
     
     getForked: function(num) {
-      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
+
+      return this.parseData[parseInt(num)]["is_forked"] ? WRONG_MARK : CHECK_MARK;
     },
     getReadme: function(num) {
-      return num > 500 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_readme_good"] ? CHECK_MARK : WRONG_MARK;
     },
     getContributions: function(num) {
-      return num > 15 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_contributor_active"] ? CHECK_MARK : WRONG_MARK;
     },
     getRecentCommits: function(num) {
-      return num < 2 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_development_recent"] ? CHECK_MARK : WRONG_MARK;
     },
     getIssues: function(num) {
-      return num < 50 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_open_issues_small"] ? CHECK_MARK : WRONG_MARK;
     },
     getStars: function(num) {
-      return num;
+      return this.parseData[parseInt(num)]["num_stars"];
     },
 
     // END DEV METHODS
