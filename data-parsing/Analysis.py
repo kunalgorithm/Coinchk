@@ -2,6 +2,7 @@ import json
 import numpy as np
 import math
 from datetime import datetime
+import zipfile
 
 # Read in the input json data and store in variable data
 with open("top_10coins_data.json", "r") as input_file:
@@ -79,9 +80,9 @@ def readme_valid(currency_data, threshold):
 #contributors
 def team_size(currency_data):
     if (int(currency_data["rank"]) <= 100):
-        return currency_data["num_contributors"] >= 15
+        return currency_data["num_contributors"] >= 30
     elif (int(currency_data["rank"]) > 100 and int(currency_data["rank"]) <= 500):
-        return currency_data["num_contributors"] >= 10
+        return currency_data["num_contributors"] >= 15
     else:
         return currency_data["num_contributors"] >= 5
 
@@ -140,8 +141,138 @@ def parse_home_data(input, output):
 
 
 
-# Methods for creating new data parameters from existing ones
-# For commits + num days since commit
+def compute_max(lst):
+    array = np.array(lst)
+    return np.amax(lst)
+
+
+def max_given_key(key, d):
+    temp = []
+    for i in range(0, len(d)):
+        temp.append(d[i][key])
+    return compute_max(temp)
+
+
+def max_lines_edited(d):
+    temp = []
+    for i in range(0, len(d)):
+        total = 0
+        for commit in d[i]["commits"]:
+            total += commit["num_lines_edited"]
+        temp.append(total)
+    return compute_max(temp)
+
+
+def open_source_score(currency_data):
+    return 100
+
+def forked_score(currency_data):
+    if (currency_data["forked"] == 1):
+        return 0
+    else:
+        return 300
+
+def dev_score(currency_data, max_lines):
+    ave_pulls = average_pull_request_days(currency_data)
+    ave_commit = average_commit_days(currency_data)
+    lines_edited = 0
+    for details in currency_data["commits"]:
+        lines_edited += details["num_lines_edited"]
+
+    lines_score = (lines_edited / max_lines) * 75
+    ave_pulls_score = (ave_pulls * (-0.667)) + 100
+    if (ave_pulls_score < 0):
+        ave_pulls_score = 0
+    ave_commit_score = (ave_pulls * (-0.5)) + 75
+    if (ave_commit_score < 0):
+        ave_commit_score = 0
+
+    return lines_score + ave_pulls_score + ave_commit_score
+
+def contr_score(currency_data, max_contr):
+    score = (currency_data["num_contributors"] / max_contr) * 250
+    if score > 250:
+        return 250
+    else:
+        return score
+
+def interest_score(currency_data, max_sum):
+    sum = currency_data["num_stars"] + currency_data["num_watchers"] + currency_data["num_forks"]
+    score = (currency_data["num_contributors"] / max_sum) * 150
+    if (score > 150):
+        return 150
+    else:
+        return score
+
+def readme_score(currency_data, max_lines):
+    score = (currency_data["readme_linecount"] / max_lines) * 50
+    if (score > 50):
+        return 50
+    else:
+        return score
+
+def open_issues_score(currency_data):
+    allowance = currency_data["num_issues_open"] - currency_data["num_stars"]
+    if (allowance > 0):
+        temp = allowance * (-0.5)
+        if (temp > -20):
+            return 0
+        else:
+            return 20 - temp
+    else:
+        return 0
+
+
+
+
+def currencyScores(input, output):
+    overall = {}
+    potential = 1120
+
+    with open("top_10coins_data.json", "r") as input_file:
+        data1 = json.load(input_file)
+        input_file.close()
+
+    max_lines = max_lines_edited(data1)
+    max_contr = max_given_key("num_contributors", data1)
+    max_stars = max_given_key("num_stars", data1)
+    max_watchers = max_given_key("num_watchers", data1)
+    max_forks = max_given_key("num_forks", data1)
+    max_readme_line = max_given_key("readme_linecount", data1)
+
+    with zipfile.ZipFile(input, "r") as input_file:
+        for file in input_file.namelist():
+            with input_file.open(file) as f:
+                data = f.read()
+                d = json.loads(data.decode("utf-8"))
+
+                for i in range(0, len(d)):
+                    currency_data = d[i]
+                    currency_name = d[i]["name"]
+                    score_attr_1 = open_source_score(currency_data)
+                    score_attr_2 = forked_score(currency_data)
+                    score_attr_3 = dev_score(currency_data, max_lines)
+                    score_attr_4 = contr_score(currency_data, max_contr)
+                    score_attr_5 = interest_score(currency_data,
+                                                        max_stars
+                                                        + max_watchers
+                                                        + max_forks)
+                    score_attr_6 = readme_score(currency_data, max_readme_line)
+                    score_attr_7 = open_issues_score(currency_data)
+
+                    final_score = ((score_attr_1 + score_attr_2 + score_attr_3 +
+                                    score_attr_4 + score_attr_5 + score_attr_6 + score_attr_7) / potential) * 100
+                    overall.update({currency_name: final_score})
+    with open(output, "w") as f:
+        json.dump(overall, f)
+        f.close()
+
+
+
+
+
+
+
 
 
 
@@ -274,11 +405,6 @@ def all_currency_home_data(output):
 #                               Compute an Aggregated Value for each currency
 #-------------------------------------------------------------------------------------------------
 
-
-def compute_max(lst):
-    array = np.array(lst)
-    return np.amax(lst)
-
 # entry_names = data["bitcoin"].keys()
 
 entry_names = ["num_branches", "num_stars", "num_forks", "num_watchers",
@@ -318,7 +444,18 @@ def all_scores():
 
 
 
+
+
+
+
+
+
+
+
+
+
 def __init__():
+    currencyScores("allJson.zip", "score_output.json")
     parse_home_data("top_10coins_data.json", "top_10coins_data_ouput.json")
     parse_home_data("top11_43_coins_data.json", "top11_43_coins_data_ouput.json")
     parse_home_data("top_44_50_coins_data.json", "top_44_50_coins_data_ouput.json")
