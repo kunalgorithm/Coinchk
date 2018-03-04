@@ -33,6 +33,7 @@ def _details(coin):
     return {
         'name': coin.coin_name,
         'is_open_sourced': 1 if coin.is_open_sourced else 0,
+        'dev_score': coin.dev_score,
         'is_forked': 1 if coin.forked else 0,
         'is_readme_good': 1 if coin.readme_exists and coin.readme_num_lines >= 50 else 0,
         'is_contributor_active': 1 if coin.num_contributors >= req else 0,

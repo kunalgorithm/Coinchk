@@ -14,7 +14,7 @@ class CoinResult(models.Model):
 
     readme_exists = models.BooleanField(default=False)
     readme_num_lines = models.IntegerField(default=0)
-
+    dev_score = models.FloatField(default=0)
     num_contributors = models.IntegerField(default=0)
     latest_commits = models.DateField(null=True, blank=True)
     bin_commits = models.BooleanField(default=False)
