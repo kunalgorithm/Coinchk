@@ -190,14 +190,26 @@ def dev_score(currency_data, max_lines):
     return lines_score + ave_pulls_score + ave_commit_score
 
 def contr_score(currency_data, max_contr):
-    return (currency_data["num_contributors"] / max_contr) * 250
+    score = (currency_data["num_contributors"] / max_contr) * 250
+    if score > 250:
+        return 250
+    else:
+        return score
 
 def interest_score(currency_data, max_sum):
     sum = currency_data["num_stars"] + currency_data["num_watchers"] + currency_data["num_forks"]
-    return (currency_data["num_contributors"] / max_sum) * 150
+    score = (currency_data["num_contributors"] / max_sum) * 150
+    if (score > 150):
+        return 150
+    else:
+        return score
 
 def readme_score(currency_data, max_lines):
-    return (currency_data["readme_linecount"] / max_lines) * 250
+    score = (currency_data["readme_linecount"] / max_lines) * 50
+    if (score > 50):
+        return 50
+    else:
+        return score
 
 def open_issues_score(currency_data):
     allowance = currency_data["num_issues_open"] - currency_data["num_stars"]
@@ -247,6 +259,7 @@ def currencyScores(input, output):
                                                         + max_forks)
                     score_attr_6 = readme_score(currency_data, max_readme_line)
                     score_attr_7 = open_issues_score(currency_data)
+
                     final_score = ((score_attr_1 + score_attr_2 + score_attr_3 +
                                     score_attr_4 + score_attr_5 + score_attr_6 + score_attr_7) / potential) * 100
                     overall.update({currency_name: final_score})
