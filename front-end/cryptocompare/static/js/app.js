@@ -132,6 +132,9 @@ let app = new Vue({
     getStars: function(num) {
       return this.parseData[parseInt(num)]["num_stars"];
     },
+    getScore: function(num) {
+      return this.parseData[parseInt(num)]["dev_score"];
+    },
 
     // END DEV METHODS
 
