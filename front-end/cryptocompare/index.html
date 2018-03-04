@@ -40,7 +40,8 @@
             <td>Rank</td>
             <td>Name</td>
             <td>Symbol</td>
-            <td>Price (USD)</td>
+            <!-- <td>Price (USD)</td> -->
+            <td>Market Cap (USD)</td>
             <td>1H</td>
 <!--             <td>1D</td>
             <td>1W</td> -->
@@ -52,14 +53,14 @@
             <td>Addressed Issues</td>
             <td>Number of Stars</td>
             <td><strong>Overall Score</strong></td>
-            <!-- <td>Market Cap (USD)</td> -->
         </thead>
         <tbody>
           <tr v-cloak v-for="coin in coins">
             <td>{{ coin.rank }}</td>
             <td><img v-bind:src="getCoinImage(coin.symbol)"> {{ coin.name }}</td>
             <td>{{ coin.symbol }}</td>
-            <td>{{ coin.price_usd | currency }}</td>
+            <!-- <td>{{ coin.price_usd | currency }}</td> -->
+            <td>{{ coin.market_cap_usd | currency }}</td>
             <td v-bind:style="getColor(coin.percent_change_1h)">
               <span v-if="coin.percent_change_1h > 0">+</span>{{ coin.percent_change_1h }}%
             </td>
@@ -80,7 +81,6 @@
 
 
             <!-- Market Cap (USD) -->
-            <!-- <td>{{ coin.market_cap_usd | currency }}</td> -->
             <!-- Open Link -->
             <!-- <td><a :href="/coin/">Open</a></td> -->
           </tr>
