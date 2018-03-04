@@ -17,7 +17,7 @@ let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
 let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-checkbox-512.png";
 let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
 
-let LOCAL_API = "http://localhost:8000/coins?from=1&to=20";
+let LOCAL_API = "http://localhost:8000/coins?from=1&to=100";
 let SERVER_API = "http://coinchk.com/parsedData.json";
 
 // The amount of milliseconds (ms) after which we should update our currency
@@ -59,7 +59,7 @@ let app = new Vue({
     getCoins: function() {
       let self = this;
 
-      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=16")
+      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=100")
         .then((resp) => {
           this.coins = resp.data;
         })
@@ -81,8 +81,15 @@ let app = new Vue({
       // for currency images
       symbol = (symbol === "MIOTA" ? "IOT" : symbol);
       symbol = (symbol === "VERI" ? "VRM" : symbol);
+      try {
+        return CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl
+      }
+      catch(err) {
+        return CRYPTOCOMPARE_URI + this.coinData["BTC"].ImageUrl
+      }
 
-      return CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl;
+      // return CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl ? CRYPTOCOMPARE_URI + this.coinData[symbol].ImageUrl : CRYPTOCOMPARE_URI + this.coinData["BTC"].ImageUrl ;
+      // return CRYPTOCOMPARE_URI + this.coinData["BTC"].ImageUrl;
     },
 
     // DEV METHODS
@@ -131,6 +138,9 @@ let app = new Vue({
     },
     getStars: function(num) {
       return this.parseData[parseInt(num)]["num_stars"];
+    },
+    getScore: function(num) {
+      return this.parseData[parseInt(num)]["dev_score"];
     },
 
     // END DEV METHODS
