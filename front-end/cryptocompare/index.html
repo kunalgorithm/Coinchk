@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CryptoCompare</title>
+    <title>CoinChk</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -20,6 +20,7 @@
   </head>
   <body class="container">
     <h1>CoinCh-k</h1>
+    <h2>HackRice 7.5</h2>
     <h3>Developed by Kunal Shah, Nate Kim, and Krishna Goel</h3>
 
     <div class="row">
@@ -46,10 +47,11 @@
             <td>Open Source</td>
             <td>Forked Repo</td>
             <td>Readme Lines</td>
-            <td>Number Contributors</td>
+            <td>Active Contributors</td>
             <td>Recent Commits (last 2 months)</td>
-            <td>Number if Issues</td>
-            <td>Number if Stars</td>
+            <td>Addressed Issues</td>
+            <td>Number of Stars</td>
+            <td>Overall Score</td>
             <!-- <td>Market Cap (USD)</td> -->
         </thead>
         <tbody>
@@ -67,13 +69,13 @@
             <td v-bind:style="getColor(coin.percent_change_7d)">
               <span v-if="coin.percent_change_7d > 0">+</span>{{ coin.percent_change_7d }}%
             </td> -->
-            <td><img v-bind:src="getOpenSource(coin.price_usd)"></td>
-            <td><img v-bind:src="getForked(coin.price_usd)"></td>
-            <td><img v-bind:src="getReadme(coin.price_usd)"></td>
-            <td><img v-bind:src="getContributions(coin.price_usd)"></td>
-            <td><img v-bind:src="getRecentCommits(coin.price_usd)"></td>
-            <td><img v-bind:src="getIssues(coin.price_usd)"></td>
-            <td>{{ coin.rank }}</td> 
+            <td><img v-bind:src="getOpenSource(coin.rank)"></td>
+            <td><img v-bind:src="getForked(coin.rank)"></td>
+            <td><img v-bind:src="getReadme(coin.rank)"></td>
+            <td><img v-bind:src="getContributions(coin.rank)"></td>
+            <td><img v-bind:src="getRecentCommits(coin.rank)"></td>
+            <td><img v-bind:src="getIssues(coin.rank)"></td>
+            <td>{{ getStars(coin.rank) }}</td> 
 
 
             <!-- Market Cap (USD) -->

@@ -17,6 +17,9 @@ let COINMARKETCAP_API_URI = "https://api.coinmarketcap.com";
 let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-checkbox-512.png";
 let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
 
+let LOCAL_API = "http://localhost:8000/coins?from=1&to=20";
+let SERVER_API = "http://coinchk.com/parsedData.json";
+
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
 let UPDATE_INTERVAL = 60 * 1000;
@@ -25,7 +28,9 @@ let app = new Vue({
   el: "#app",
   data: {
     coins: [],
-    coinData: {}
+    coinData: {},
+    parseData: {}
+
   },
   methods: {
 
@@ -54,7 +59,7 @@ let app = new Vue({
     getCoins: function() {
       let self = this;
 
-      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=10")
+      axios.get(COINMARKETCAP_API_URI + "/v1/ticker/?limit=16")
         .then((resp) => {
           this.coins = resp.data;
         })
@@ -81,26 +86,51 @@ let app = new Vue({
     },
 
     // DEV METHODS
-    getOpenSource: function(num) {
-      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
+    getParseData: function() {
+      let self = this;
+      // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      // const url = "http://coinchk.com/parsedData.json"; // site that doesn’t send Access-Control-*
+      // fetch(proxyurl + url) // https://cors-anywhere.herokuapp.com/https://example.com
+      // .then(response => response.text())
+      // // .then(contents => console.log(contents))
+      // .then((resp) => {
+      //     this.parseData = resp.data;
+      //   })
+      // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+
+      axios.get(LOCAL_API)
+        .then((resp) => {
+          // console.log(resp.data);
+          this.parseData = resp.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      
     },
+    getOpenSource: function(num) {
+      return this.parseData[parseInt(num)]["is_open_sourced"] ? CHECK_MARK : WRONG_MARK;
+      
+    },
+    
     getForked: function(num) {
-      return num > 1.00 ? CHECK_MARK : WRONG_MARK;
+
+      return this.parseData[parseInt(num)]["is_forked"] ? WRONG_MARK : CHECK_MARK;
     },
     getReadme: function(num) {
-      return num > 500 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_readme_good"] ? CHECK_MARK : WRONG_MARK;
     },
     getContributions: function(num) {
-      return num > 15 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_contributor_active"] ? CHECK_MARK : WRONG_MARK;
     },
     getRecentCommits: function(num) {
-      return num < 2 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_development_recent"] ? CHECK_MARK : WRONG_MARK;
     },
     getIssues: function(num) {
-      return num < 50 ? CHECK_MARK : WRONG_MARK;
+      return this.parseData[parseInt(num)]["is_open_issues_small"] ? CHECK_MARK : WRONG_MARK;
     },
     getStars: function(num) {
-      return num;
+      return this.parseData[parseInt(num)]["num_stars"];
     },
 
     // END DEV METHODS
@@ -120,6 +150,7 @@ let app = new Vue({
    */
   created: function () {
     this.getCoinData();
+    this.getParseData();
   }
 });
 
@@ -133,3 +164,7 @@ let app = new Vue({
 setInterval(() => {
   app.getCoins();
 }, UPDATE_INTERVAL);
+
+
+
+
