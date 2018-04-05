@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from datetime import datetime
 
 from repos.models import CoinResult
