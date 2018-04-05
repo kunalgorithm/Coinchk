@@ -205,7 +205,9 @@ def interest_score(currency_data, max_sum):
         return score
 
 def readme_score(currency_data, max_lines):
-    score = (currency_data["readme_linecount"] / max_lines) * 50
+    if (currency_data["readme_linecount"] < 1):
+        return 0
+    score = (np.log10(currency_data["readme_linecount"]) / (max_lines)) * 50
     if (score > 50):
         return 50
     else:
@@ -242,7 +244,7 @@ def currencyScores(input, output):
             max_watchers = max(max_given_key("num_watchers", d), max_watchers)
             max_forks = max(max_given_key("num_forks", d), max_forks)
             max_readme_line = max(max_given_key("readme_linecount", d), max_readme_line)
-
+    max_readme_line = np.log10(max_readme_line)
     with zipfile.ZipFile(input, "r") as input_file:
         for file in input_file.namelist():
             with input_file.open(file) as f:
@@ -265,6 +267,12 @@ def currencyScores(input, output):
                     final_score = ((score_attr_1 + score_attr_2 + score_attr_3 +
                                     score_attr_4 + score_attr_5 + score_attr_6 + score_attr_7) / potential) * 100
                     overall.update({currency_name: final_score})
+                    # if (currency_name == "monero"):
+                    #     print(score_attr_3)
+                    #     print(score_attr_4)
+                    #     print(score_attr_5)
+                    #     print(score_attr_6)
+                    #     print(score_attr_7)
     with open(output, "w") as f:
         json.dump(overall, f)
         f.close()
