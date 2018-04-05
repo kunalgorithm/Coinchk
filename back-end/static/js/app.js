@@ -18,7 +18,7 @@ let CHECK_MARK = "https://thetinylife.com/wp-content/uploads/2017/08/checked-che
 let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6TzGg.png";
 
 let LOCAL_API = "http://localhost:8000/coins?from=1&to=100";
-let SERVER_API = "http://coinchk.com/parsedData.json";
+let SERVER_API = "http://104.131.19.132:8000/coins/?from=1&to=20";
 
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
