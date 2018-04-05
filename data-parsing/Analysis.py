@@ -132,7 +132,7 @@ def parse_home_data(input, output):
         f.close()
 
 
-
+# -------------- END OF BINARY COMPUTATIONS ----------------------------------------#
 
 
 
@@ -183,7 +183,7 @@ def dev_score(currency_data, max_lines):
     ave_pulls_score = (ave_pulls * (-0.667)) + 100
     if (ave_pulls_score < 0):
         ave_pulls_score = 0
-    ave_commit_score = (ave_pulls * (-0.5)) + 75
+    ave_commit_score = (ave_commit * (-0.5)) + 75
     if (ave_commit_score < 0):
         ave_commit_score = 0
 
@@ -224,21 +224,24 @@ def open_issues_score(currency_data):
 
 
 
-
 def currencyScores(input, output):
     overall = {}
     potential = 1120
+    max_lines, max_contr, max_starts, max_watchers, max_forks, max_readme_line = 0, 0, 0, 0, 0, 0
 
-    with open("top_10coins_data.json", "r") as input_file:
-        data1 = json.load(input_file)
-        input_file.close()
+    with zipfile.ZipFile(input, "r") as input_file:
+        for file in input_file.namelist():
+            with input_file.open(file) as f:
+                data = f.read()
+                d = json.loads(data.decode("utf-8"))
 
-    max_lines = max_lines_edited(data1)
-    max_contr = max_given_key("num_contributors", data1)
-    max_stars = max_given_key("num_stars", data1)
-    max_watchers = max_given_key("num_watchers", data1)
-    max_forks = max_given_key("num_forks", data1)
-    max_readme_line = max_given_key("readme_linecount", data1)
+
+            max_lines = max(max_lines_edited(d), max_lines)
+            max_contr = max(max_given_key("num_contributors", d), max_contr)
+            max_stars = max(max_given_key("num_stars", d), max_starts)
+            max_watchers = max(max_given_key("num_watchers", d), max_watchers)
+            max_forks = max(max_given_key("num_forks", d), max_forks)
+            max_readme_line = max(max_given_key("readme_linecount", d), max_readme_line)
 
     with zipfile.ZipFile(input, "r") as input_file:
         for file in input_file.namelist():
@@ -259,7 +262,6 @@ def currencyScores(input, output):
                                                         + max_forks)
                     score_attr_6 = readme_score(currency_data, max_readme_line)
                     score_attr_7 = open_issues_score(currency_data)
-
                     final_score = ((score_attr_1 + score_attr_2 + score_attr_3 +
                                     score_attr_4 + score_attr_5 + score_attr_6 + score_attr_7) / potential) * 100
                     overall.update({currency_name: final_score})
