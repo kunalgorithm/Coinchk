@@ -106,7 +106,7 @@ let app = new Vue({
       //   })
       // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
 
-      axios.get(LOCAL_API)
+      axios.get(SERVER_API)
         .then((resp) => {
           // console.log(resp.data);
           this.parseData = resp.data;
