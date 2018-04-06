@@ -20,6 +20,9 @@ let WRONG_MARK = "https://cdn-images-1.medium.com/max/1600/1*-ioz6cNvcD9roazfd6T
 let LOCAL_API = "http://localhost:8000/coins?from=1&to=100";
 let SERVER_API = "http://104.131.19.132:8000/coins/?from=1&to=20";
 
+// Designate the local or server api here
+let COINCHK_API = SERVER_API
+
 // The amount of milliseconds (ms) after which we should update our currency
 // charts.
 let UPDATE_INTERVAL = 60 * 1000;
@@ -30,7 +33,8 @@ let app = new Vue({
   data: {
     coins: [],
     coinData: {},
-    parseData: {}
+    parseData: {},
+    openSource: 0
 
   },
   methods: {
@@ -106,7 +110,7 @@ let app = new Vue({
       //   })
       // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
 
-      axios.get(SERVER_API)
+      axios.get(COINCHK_API)
         .then((resp) => {
           // console.log(resp.data);
           this.parseData = resp.data;
@@ -117,25 +121,25 @@ let app = new Vue({
       
     },
     getOpenSource: function(num) {
-      return this.parseData[parseInt(num)]["is_open_sourced"] ? CHECK_MARK : WRONG_MARK;
+      this.openSource = this.parseData[parseInt(num)]["is_open_sourced"]
+      return this.openSource ? CHECK_MARK : WRONG_MARK;
       
     },
     
     getForked: function(num) {
-
-      return this.parseData[parseInt(num)]["is_forked"] ? WRONG_MARK : CHECK_MARK;
+      return (this.parseData[parseInt(num)]["is_forked"] && this.openSource) ? WRONG_MARK : CHECK_MARK;
     },
     getReadme: function(num) {
-      return this.parseData[parseInt(num)]["is_readme_good"] ? CHECK_MARK : WRONG_MARK;
+      return (this.parseData[parseInt(num)]["is_readme_good"] && this.openSource) ? CHECK_MARK : WRONG_MARK;
     },
     getContributions: function(num) {
-      return this.parseData[parseInt(num)]["is_contributor_active"] ? CHECK_MARK : WRONG_MARK;
+      return (this.parseData[parseInt(num)]["is_contributor_active"] && this.openSource) ? CHECK_MARK : WRONG_MARK;
     },
     getRecentCommits: function(num) {
-      return this.parseData[parseInt(num)]["is_development_recent"] ? CHECK_MARK : WRONG_MARK;
+      return (this.parseData[parseInt(num)]["is_development_recent"] && this.openSource) ? CHECK_MARK : WRONG_MARK;
     },
     getIssues: function(num) {
-      return this.parseData[parseInt(num)]["is_open_issues_small"] ? CHECK_MARK : WRONG_MARK;
+      return (this.parseData[parseInt(num)]["is_open_issues_small"] && this.openSource) ? CHECK_MARK : WRONG_MARK;
     },
     getStars: function(num) {
       return this.parseData[parseInt(num)]["num_stars"];
